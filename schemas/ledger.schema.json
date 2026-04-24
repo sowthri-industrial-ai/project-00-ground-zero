@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ledger Entry",
+  "type": "object",
+  "required": ["timestamp", "action", "status"],
+  "properties": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "action":    { "type": "string", "enum": ["deploy-azure", "teardown-azure", "deploy-local", "eval-run", "red-team-run"] },
+    "status":    { "type": "string", "enum": ["success", "failure", "cancelled", "skipped"] },
+    "actor":     { "type": "string" },
+    "sha":       { "type": "string" }
+  }
+}

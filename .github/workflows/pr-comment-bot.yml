@@ -1,0 +1,32 @@
+name: 💬 PR Comment Bot · As-built Summary
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  comment:
+    name: Upsert as-built comment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate summary
+        id: summary
+        run: |
+          bash scripts/pr-comment-bot.sh > pr-summary.md
+          echo "body<<SUMEOF" >> $GITHUB_OUTPUT
+          cat pr-summary.md >> $GITHUB_OUTPUT
+          echo "SUMEOF" >> $GITHUB_OUTPUT
+
+      - name: Upsert comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.summary.outputs.body }}
+          edit-mode: replace
+          comment-id: ${{ github.event.pull_request.number }}-asbuilt

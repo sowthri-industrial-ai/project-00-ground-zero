@@ -1,0 +1,38 @@
+name: 📊 Eval Regression · RAGAS · DeepEval
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  eval:
+    name: Run eval suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Sync deps
+        run: uv sync
+
+      - name: Run RAGAS + DeepEval (Brief E fills)
+        run: |
+          echo "Eval scaffold · Brief E implements actual suites"
+          echo "SKIPPED" > eval-results.xml
+
+      - name: Write summary
+        if: always()
+        run: |
+          {
+            echo "## 📊 Eval Regression Summary"
+            echo "- Status: ${{ job.status }}"
+            echo "- Brief E wires actual RAGAS + DeepEval assertions"
+          } >> "$GITHUB_STEP_SUMMARY"

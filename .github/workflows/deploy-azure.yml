@@ -1,0 +1,65 @@
+name: 🚀 Deploy · Azure · Manual Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      what-if:
+        description: "Run in what-if mode (no actual deploy)"
+        type: boolean
+        default: true
+      ephemeral:
+        description: "Ephemeral spin-up (ADR-0013)"
+        type: boolean
+        default: true
+
+permissions:
+  id-token: write   # OIDC
+  contents: read
+
+env:
+  AZURE_REGION: swedencentral
+  RESOURCE_GROUP: rg-genai-portfolio-prod-swc
+
+jobs:
+  deploy:
+    name: Deploy substrate to Azure
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure OIDC login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy (what-if or real)
+        run: |
+          MODE=""
+          [ "${{ inputs.what-if }}" = "true" ] && MODE="--what-if" || MODE=""
+          bash scripts/deploy.sh --target=azure $MODE
+
+      - name: Append ledger entry
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          bash scripts/ledger-write.sh \
+            --action=deploy-azure \
+            --status="$STATUS" \
+            --actor="${{ github.actor }}" \
+            --sha="${{ github.sha }}"
+
+      - name: Write job summary
+        if: always()
+        run: |
+          {
+            echo "## 🚀 Azure Deploy Summary"
+            echo ""
+            echo "- Mode: ${{ inputs.what-if && 'what-if (dry run)' || 'live deploy' }}"
+            echo "- Ephemeral: ${{ inputs.ephemeral }}"
+            echo "- Status: ${{ job.status }}"
+            echo "- Region: $AZURE_REGION"
+            echo "- RG: $RESOURCE_GROUP"
+          } >> "$GITHUB_STEP_SUMMARY"

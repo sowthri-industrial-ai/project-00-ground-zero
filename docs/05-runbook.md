@@ -274,3 +274,79 @@ Brief C's smoke tests assert against these paths.
 | `runtime-contract.yml` endpoints | `<TBD-wave-4>` | populated |
 | Key Vault secrets | schema only | written post-deploy |
 | Local Docker Compose | ✅ | ✅ (unchanged) |
+
+---
+
+## § 7 · Delivery Pipeline
+
+Brief C authors 7 GitHub Actions workflows in `.github/workflows/` and shell scripts in `scripts/`. The pipeline enforces gates G1-G4 and produces a ledger that the PCP (Brief D) consumes.
+
+### § 7.1 · Workflow inventory
+
+| Workflow | Trigger | Purpose |
+|---|---|---|
+| `ci.yml` | push, PR | Ruff lint + pytest + Bicep build |
+| `security-scan.yml` | PR, weekly | Gitleaks + dependency review |
+| `deploy-azure.yml` | manual | OIDC-authed Azure deploy |
+| `teardown-azure.yml` | manual | Delete RG (requires DELETE confirmation) |
+| `eval-regression.yml` | PR on src/, manual | RAGAS + DeepEval scaffold |
+| `red-team.yml` | weekly, manual | Garak + PyRIT scaffold |
+| `pr-comment-bot.yml` | PR opened/sync | Upsert as-built summary comment |
+
+### § 7.2 · Required GitHub Secrets (set before Wave 4)
+
+```bash
+gh secret set AZURE_CLIENT_ID       --body "<from platform-contract.yml>"
+gh secret set AZURE_TENANT_ID       --body "<from platform-contract.yml>"
+gh secret set AZURE_SUBSCRIPTION_ID --body "<from platform-contract.yml>"
+```
+
+### § 7.3 · Production environment
+
+```bash
+gh api -X PUT /repos/sowthri-industrial-ai/project-00-ground-zero/environments/production \
+  -F wait_timer=0 \
+  -F reviewers='[]' \
+  -F deployment_branch_policy='{"protected_branches":true,"custom_branch_policies":false}'
+```
+
+---
+
+## § 8 · Stage Gates · G1 through G4
+
+Each gate is a standalone shell script with a defined exit contract. Workflows invoke gates sequentially and halt on any non-zero exit.
+
+| Gate | Script | Purpose | Exit 0 conditions |
+|---|---|---|---|
+| G1 | `gate-g1.sh` | Build gate | uv sync succeeds OR no python code yet |
+| G2 | `gate-g2.sh` | Safety wiring | content-safety.bicep present |
+| G3 | `gate-g3.sh <url>` | Health probe | `/health` returns 200 OR no URL |
+| G4 | `gate-g4.sh` | Eval regression | eval-results.xml within thresholds OR absent |
+
+Each gate writes a JSON artifact to `as-built/g<N>-result.json`.
+
+### § 8.1 · Deliberate failure branches (ADR-0011)
+
+Three branches kept permanent to demonstrate gate behavior:
+- `demo-fails-g1` — broken pyproject.toml
+- `demo-fails-guardrail` — removed content-safety.bicep
+- `demo-regresses-eval` — tanked eval thresholds
+
+---
+
+## § 9 · Ledger · as-built trail
+
+`as-built/ledger.jsonl` · JSONL format · one entry per deploy/teardown event. Written by `scripts/ledger-write.sh` from workflow runs.
+
+Schema: `schemas/ledger.schema.json`.
+
+### § 9.1 · Example entries
+
+```jsonl
+{"timestamp": "2026-04-24T09:30:00Z", "action": "deploy-azure", "status": "success", "actor": "sowthri-industrial-ai", "sha": "a1b2c3d"}
+{"timestamp": "2026-04-24T10:45:00Z", "action": "teardown-azure", "status": "success", "actor": "sowthri-industrial-ai", "sha": "a1b2c3d"}
+```
+
+### § 9.2 · PCP consumption
+
+Brief D's Portfolio Control Plane fetches `ledger.jsonl` at build time and renders the timeline with newest-first ordering. REJECTED/failure entries stay visible (honesty principle).

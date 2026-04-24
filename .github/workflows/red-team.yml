@@ -1,0 +1,30 @@
+name: 🎯 Red Team · Garak · PyRIT
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"  # weekly Sunday 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  red-team:
+    name: Run adversarial suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+
+      - name: Scaffold only (Brief E wires real probes)
+        run: |
+          echo "Red-team scaffold · Brief E wires Garak + PyRIT against Hello AI endpoint"
+
+      - name: Write summary
+        if: always()
+        run: |
+          {
+            echo "## 🎯 Red Team Summary"
+            echo "- Run type: ${{ github.event_name }}"
+            echo "- Status: ${{ job.status }}"
+          } >> "$GITHUB_STEP_SUMMARY"

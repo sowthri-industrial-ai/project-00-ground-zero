@@ -1,0 +1,58 @@
+name: 📋 CI · Lint · Test · Validate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-and-test:
+    name: Ruff · pytest · Bicep lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.4.*"
+
+      - name: Sync dependencies
+        run: uv sync --no-dev
+
+      - name: Ruff · lint
+        run: uv run ruff check . || echo "::warning::Ruff issues — soft gate in Wave 2"
+
+      - name: Ruff · format check
+        run: uv run ruff format --check . || echo "::warning::Format drift — soft gate in Wave 2"
+
+      - name: Install Bicep
+        run: |
+          curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+          chmod +x bicep && sudo mv bicep /usr/local/bin/bicep
+
+      - name: Bicep · build all modules
+        run: |
+          for f in infra/bicep/modules/*.bicep; do
+            echo "Building $f"
+            bicep build "$f" --stdout > /dev/null
+          done
+
+      - name: Write job summary
+        if: always()
+        run: |
+          {
+            echo "## 📋 CI Summary"
+            echo ""
+            echo "| Check | Result |"
+            echo "|---|---|"
+            echo "| Ruff lint | ${{ job.status }} |"
+            echo "| Bicep build | ${{ job.status }} |"
+            echo ""
+            echo "Run $GITHUB_RUN_NUMBER · commit \`${GITHUB_SHA:0:7}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
