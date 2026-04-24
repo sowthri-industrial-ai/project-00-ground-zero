@@ -4,7 +4,7 @@
 Document    · Charter-00 · Project Ground Zero
 Revision    · 1.3
 Date        · 2026-04-24
-Owner       · S. Somasundaram (Architect)
+Owner       · Sowthri (Architect)
 Status      · Kick-off · Pre-build
 Program     · GenAI Architect Portfolio
 Location    · Dammam, KSA
@@ -137,7 +137,7 @@ Prove the GenAI Architect Portfolio platform works end-to-end before any use-cas
 
 | Role | Owner | Responsibility |
 |---|---|---|
-| Architect | S. Somasundaram (Architect Claude chat) | Charter · Briefs · reviews · architectural decisions |
+| Architect | Sowthri (Architect Claude chat) | Charter · Briefs · reviews · architectural decisions |
 | Builder(s) | Separate Claude Code sessions, one per Brief | Implementation · tests · documentation |
 | Orchestrator | `scripts/deploy.sh` + GitHub Actions | Packaging · deploy fan-out · ledger write |
 | Reviewer | Architect | Review Builder output against acceptance criteria |

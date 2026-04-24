@@ -30,4 +30,4 @@ LangGraph · Semantic Kernel · MCP · Azure OpenAI · AI Search · Cosmos · pg
 
 ---
 
-Built by S. Somasundaram · Dammam, KSA · 2026
+Built by Sowthri · Dammam, KSA · 2026

@@ -4,7 +4,7 @@
 Document  · tech-stack-coverage-matrix
 Revision  · 2.0
 Date      · 2026-04-24
-Owner     · S. Somasundaram (Architect)
+Owner     · Sowthri (Architect)
 Purpose   · Explicit sequencing of tech stack across Ground Zero + Projects 1+
 Status    · Companion to Charter-00 Rev 1.3
 ```
