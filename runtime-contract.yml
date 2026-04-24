@@ -1,0 +1,80 @@
+# ============================================================================
+# runtime-contract.yml
+# Produced by Brief B · Consumed by Brief E
+# Rev 1.0 · 2026-04-24
+# ============================================================================
+
+aoai:
+  endpoint: "<TBD-wave-4>"
+  auth_mode: "entra_managed_identity"
+  deployments:
+    chat_small: "gpt-4o-mini"
+    chat_large: "gpt-4o"
+    embedding: "text-embedding-3-small"
+  api_version: "2024-10-21"
+
+ai_search:
+  endpoint: "<TBD-wave-4>"
+  auth_mode: "api_key"  # Free tier Microsoft constraint
+  index_name: "hello-ai-rag"
+  tier: "free"
+  semantic_enabled: false
+
+cosmos:
+  endpoint: "<TBD-wave-4>"
+  auth_mode: "entra_managed_identity"
+  database: "hello-ai"
+  containers:
+    - name: "conversations"
+      partition_key: "/session_id"
+
+blob_storage:
+  endpoint: "<TBD-wave-4>"
+  auth_mode: "entra_managed_identity"
+  containers:
+    - name: "documents"
+    - name: "artifacts"
+
+container_apps:
+  environment_name: "cae-genai-portfolio-01"
+  managed_identity_client_id: "<from-platform-contract>"
+
+content_safety:
+  endpoint: "<TBD-wave-4>"
+  auth_mode: "entra_managed_identity"
+  tier: "F0"
+  prompt_shield_enabled: true
+  groundedness_check_enabled: true
+
+observability:
+  langfuse:
+    azure_url: "<TBD-wave-4>"
+    local_url: "http://localhost:3000"
+  app_insights:
+    connection_string_secret_uri: "<TBD-wave-4>"
+
+local_runtime:
+  compose_file: "docker-compose.yml"
+  services_url:
+    langfuse: "http://localhost:3000"
+    ollama: "http://localhost:11434"
+    pgvector: "postgresql://rag:rag@localhost:5433/rag"
+
+key_vault_secrets:
+  - name: "aoai-endpoint"
+    type: "uri"
+  - name: "search-admin-key"
+    type: "password"
+  - name: "cosmos-endpoint"
+    type: "uri"
+  - name: "content-safety-endpoint"
+    type: "uri"
+  - name: "appinsights-connection-string"
+    type: "connection-string"
+  - name: "langfuse-db-password"
+    type: "password"
+
+contract:
+  version: "1.0"
+  produced_by: "brief-b"
+  consumed_by: ["brief-e"]

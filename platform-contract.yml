@@ -1,0 +1,42 @@
+# ============================================================================
+# platform-contract.yml
+# Produced by: Brief A · Consumed by: Briefs B, C, D, E
+# Rev: 1.0 · 2026-04-24
+# Values marked <TBD-wave-4> are populated on Azure credit activation.
+# ============================================================================
+
+azure:
+  subscription_id: "<TBD-wave-4>"
+  tenant_id: "<TBD-wave-4>"
+  resource_group: rg-genai-portfolio-prod-swc
+  region: swedencentral
+  key_vault_name: kv-genai-portfolio-01
+  managed_identity_name: mi-genai-portfolio-01
+
+entra:
+  app_display_name: genai-portfolio-github-oidc
+  app_object_id: "<TBD-wave-4>"
+  app_client_id: "<TBD-wave-4>"
+  federation_subjects:
+    - "repo:sowthri-industrial-ai/genai-portfolio-hub:ref:refs/heads/main"
+    - "repo:sowthri-industrial-ai/project-00-ground-zero:ref:refs/heads/main"
+
+naming:
+  prefix_pattern: "<type>-genai-portfolio-<seq>"
+  tag_keys:
+    - project
+    - project-phase
+    - environment
+    - cost-center
+    - owner
+    - poc-id
+    - managed-by
+
+github:
+  hub_repo: "https://github.com/sowthri-industrial-ai/genai-portfolio-hub"
+  project_repo: "https://github.com/sowthri-industrial-ai/project-00-ground-zero"
+
+contract:
+  version: "1.0"
+  produced_by: "brief-a"
+  consumed_by: [brief-b, brief-c, brief-d, brief-e]

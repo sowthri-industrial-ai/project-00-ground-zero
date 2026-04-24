@@ -1,0 +1,36 @@
+[project]
+name = "project-00-ground-zero"
+version = "0.1.0"
+description = "Project Ground Zero · Hello AI substrate"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "azure-identity>=1.19",
+    "azure-keyvault-secrets>=4.9",
+    "structlog>=24.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.11",
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pre-commit>=4.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.11",
+    "pytest>=8.3",
+    "pre-commit>=4.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
