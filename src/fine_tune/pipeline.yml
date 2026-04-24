@@ -1,0 +1,44 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: hello-ai-finetune-v1
+experiment_name: hello-ai-finetune
+settings:
+  default_compute: azureml:cpu-cluster
+
+inputs:
+  training_data:
+    type: uri_file
+    path: azureml:finetune-corpus:1
+
+outputs:
+  registered_model:
+    type: mlflow_model
+
+jobs:
+  prepare_dataset:
+    type: command
+    component: ./components/prepare_dataset.yml
+    inputs:
+      raw_data: ${{parent.inputs.training_data}}
+    outputs:
+      prepared_data:
+        type: uri_folder
+
+  run_finetune:
+    type: command
+    component: ./components/run_finetune.yml
+    inputs:
+      prepared_data: ${{parent.jobs.prepare_dataset.outputs.prepared_data}}
+      base_model: gpt-4o-mini
+    outputs:
+      model_output:
+        type: uri_folder
+        mode: rw_mount
+
+  register_model:
+    type: command
+    component: ./components/register_model.yml
+    inputs:
+      model_folder: ${{parent.jobs.run_finetune.outputs.model_output}}
+    outputs:
+      registered: ${{parent.outputs.registered_model}}

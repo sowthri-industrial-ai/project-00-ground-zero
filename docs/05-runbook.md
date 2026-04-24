@@ -350,3 +350,77 @@ Schema: `schemas/ledger.schema.json`.
 ### § 9.2 · PCP consumption
 
 Brief D's Portfolio Control Plane fetches `ledger.jsonl` at build time and renders the timeline with newest-first ordering. REJECTED/failure entries stay visible (honesty principle).
+
+<!-- BRIEF-E:SECTION-13-START -->
+## § 13 · Hello AI architecture (Brief E)
+
+Four GenAI pillars integrated through the safety + observability spine.
+
+| Pillar | Entry | Integration |
+|---|---|---|
+| RAG | `src/rag/` | Docling / DocIntel / LlamaIndex / ColPali · pgvector local · AI Search Azure |
+| Agent | `src/agent/graph.py` | 4-node LangGraph · reflection · HITL · Cosmos memory |
+| Multi-Agent | `src/multi_agent/supervisor.py` | LangGraph Supervisor + MCP specialist · SK planner pre-step |
+| Fine-tune | `src/fine_tune/` | Azure ML Pipeline YAML · Model Registry · NO training |
+
+**Safety spine**: Content Safety input → generate → output gate → Presidio → NeMo → Groundedness.
+**Observability spine**: Langfuse trace every call · cost middleware → USD → App Insights metric.
+
+Why MCP: the multi-agent boundary is a *protocol* boundary · portable to non-Python specialists.
+
+## § 14 · Running locally
+
+```bash
+cp .env.example .env
+uv pip install -r requirements-brief-e.txt
+docker compose up -d
+docker exec -it project-00-ground-zero-ollama-1 ollama pull llama3.2:3b
+docker exec -it project-00-ground-zero-ollama-1 ollama pull nomic-embed-text
+
+# Fetch corpus per data/README.md (curl commands)
+uv run python scripts/generate_sample_form.py
+
+# Ingest
+uv run python -m src.rag.ingest data/nist-ai-rmf.pdf
+uv run python -m src.rag.doc_intelligence_ingest data/sample-form.pdf
+
+# Run
+uvicorn src.main:app --reload --port 8000
+streamlit run src/ui/streamlit_app.py
+```
+
+Tests per tier:
+```bash
+uv run pytest tests/unit           -m unit
+uv run pytest tests/smoke          -m smoke
+uv run pytest tests/functional     -m functional
+uv run pytest tests/guardrail      -m guardrail
+uv run pytest tests/responsible-ai -m responsible_ai
+uv run pytest tests/red-team       -m red_team
+uv run pytest tests/eval           -m eval
+```
+
+## § 15 · Deployment targets + demo-fails branches
+
+Four deploy targets (via Brief C's deploy.sh):
+```bash
+./scripts/deploy.sh --target=local
+./scripts/deploy.sh --target=git
+./scripts/deploy.sh --target=hf
+./scripts/deploy.sh --target=azure --what-if
+```
+
+Three permanent branches (NEVER merged):
+
+| Branch | What breaks | Gate that catches |
+|---|---|---|
+| demo-fails-g1 | type error in rag/generate.py | G1 mypy |
+| demo-fails-guardrail | input_gate bypassed in main.py | G4 guardrail tier |
+| demo-regresses-eval | random vectors in retrieve.py | G4 eval-regression |
+
+Create:
+```bash
+bash scripts/create-demo-fails-branches.sh
+# then file PRs from each branch → main · label `demo-fails` · DO NOT MERGE
+```
+<!-- BRIEF-E:SECTION-15-END -->

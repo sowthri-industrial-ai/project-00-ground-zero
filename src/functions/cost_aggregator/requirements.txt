@@ -1,0 +1,4 @@
+azure-functions>=1.18
+azure-cosmos>=4.7
+azure-identity>=1.17
+langfuse>=2.50

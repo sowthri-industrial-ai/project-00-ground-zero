@@ -1,0 +1,20 @@
+{"question": "What is the purpose of the NIST AI RMF?", "reference_answer": "To help organizations manage AI system risks and promote trustworthy AI."}
+{"question": "Name the four core functions of the AI RMF.", "reference_answer": "Govern, Map, Measure, Manage."}
+{"question": "What does the Govern function establish?", "reference_answer": "A culture of risk management across the organization."}
+{"question": "What does the Map function do?", "reference_answer": "Establishes context and identifies risks of an AI system."}
+{"question": "What is the Measure function for?", "reference_answer": "Analyze, assess, benchmark, and monitor AI risks and impacts."}
+{"question": "What is the Manage function for?", "reference_answer": "Prioritize and act on risks identified by Map and Measure."}
+{"question": "Is the AI RMF mandatory?", "reference_answer": "No, it is voluntary."}
+{"question": "What does trustworthy AI mean per NIST?", "reference_answer": "Valid, reliable, safe, secure, accountable, transparent, explainable, privacy-enhanced, and fair."}
+{"question": "What is an AI RMF profile?", "reference_answer": "A use-case-specific application of the core framework."}
+{"question": "Who is the AI RMF audience?", "reference_answer": "Designers, developers, deployers, and evaluators of AI systems."}
+{"question": "What is the difference between risk and harm?", "reference_answer": "Risk is potential adverse impact; harm is realized adverse impact."}
+{"question": "What role does transparency play in the AI RMF?", "reference_answer": "It enables accountability and informed decision-making about AI."}
+{"question": "What is bias in AI per NIST?", "reference_answer": "Systematic error producing unfair outcomes for specific groups."}
+{"question": "What is the role of Map in identifying risks?", "reference_answer": "To establish context and characterize potential AI risks."}
+{"question": "What is the relationship between Govern and other functions?", "reference_answer": "Govern cuts across Map, Measure, and Manage as the governance layer."}
+{"question": "What are impact assessments?", "reference_answer": "Structured analysis of potential positive and negative AI system effects."}
+{"question": "What is explainability?", "reference_answer": "Ability to understand and describe AI system behavior and decisions."}
+{"question": "What is accountability in AI?", "reference_answer": "Clear responsibility assignment for AI system outcomes and decisions."}
+{"question": "What is the intent of the Map function's context?", "reference_answer": "To scope the AI system's purpose, stakeholders, and operating environment."}
+{"question": "Why is monitoring included in Measure?", "reference_answer": "To detect changes in AI system behavior and risk over time."}

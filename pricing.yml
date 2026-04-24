@@ -1,0 +1,16 @@
+# Token → USD pricing · mirrors docs/06-tco.xlsx Pricing Reference
+gpt-4o-mini:
+  input_per_1k: 0.00015
+  output_per_1k: 0.00060
+
+gpt-4o:
+  input_per_1k: 0.00250
+  output_per_1k: 0.01000
+
+text-embedding-3-small:
+  input_per_1k: 0.00002
+  output_per_1k: 0.00000
+
+allam-2-7b-instruct:
+  input_per_1k: 0.00020
+  output_per_1k: 0.00060

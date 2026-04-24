@@ -1,0 +1,10 @@
+{"instruction": "What is the purpose of the AI RMF?", "response": "To help organizations manage AI system risks and promote trustworthy AI."}
+{"instruction": "Name the four core functions of the AI RMF.", "response": "Govern, Map, Measure, and Manage."}
+{"instruction": "What does the Govern function establish?", "response": "A culture of risk management across the organization."}
+{"instruction": "What does Map do in the AI RMF?", "response": "Establishes context and identifies risks of an AI system."}
+{"instruction": "What is the Measure function for?", "response": "Analyze, assess, benchmark, and monitor AI risks and impacts."}
+{"instruction": "Define trustworthy AI per NIST.", "response": "Valid and reliable, safe, secure, accountable, transparent, explainable, privacy-enhanced, fair."}
+{"instruction": "Is the AI RMF mandatory?", "response": "No. It is a voluntary framework."}
+{"instruction": "Who is the AI RMF intended for?", "response": "Designers, developers, deployers, and evaluators of AI systems."}
+{"instruction": "What is an AI profile?", "response": "A use-case-specific application of the AI RMF core."}
+{"instruction": "What is the difference between harm and risk?", "response": "Risk is potential; harm is realized adverse impact."}
