@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Ground Zero · Architecture · GenAI Architect Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF6EC;
+  --paper-soft:#EFEADC;
+  --ink:#1B1916;
+  --ink-mute:#6B6559;
+  --line:#D8D1BD;
+  --teal:#0D3B52;
+  --teal-it:#1A5F7A;
+  --amber:#B35C00;
+  --amber-soft:#F3E6D2;
+  --red:#9E2A2F;
+  --red-soft:#F5D8D8;
+  --green:#2E5F3E;
+  --font-serif:'Fraunces','Iowan Old Style',Georgia,serif;
+  --font-sans:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',Monaco,monospace;
+  --content-w:72ch;
+  --wide-w:100ch;
+  --grid: linear-gradient(var(--paper-soft) 1px,transparent 1px) 0 0/40px 40px,
+          linear-gradient(90deg,var(--paper-soft) 1px,transparent 1px) 0 0/40px 40px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:var(--grid);
+  color:var(--ink);
+  font-family:var(--font-sans);
+  font-size:16px;
+  line-height:1.6;
+  font-feature-settings:'ss01','cv11';
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:500;letter-spacing:-0.01em;line-height:1.2}
+h1{font-size:3.2rem;margin:0 0 .5rem 0}
+h2{font-size:2rem;margin:0 0 .75rem 0;color:var(--teal)}
+h3{font-size:1.35rem;margin:0 0 .5rem 0}
+h4{font-size:1.05rem;margin:0 0 .25rem 0;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-mute)}
+em{color:var(--teal-it);font-style:italic}
+code{font-family:var(--font-mono);font-size:.9em;background:var(--paper-soft);padding:.1em .35em;border-radius:3px}
+pre code{background:transparent;padding:0}
+a{color:var(--teal);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{color:var(--amber)}
+hr{border:none;border-top:1px solid var(--line);margin:3rem 0}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:240px 1fr;max-width:1400px;margin:0 auto;gap:0}
+.sidebar{position:sticky;top:0;align-self:start;height:100vh;padding:3rem 1.5rem;border-right:1px solid var(--line);background:rgba(250,246,236,.9);backdrop-filter:blur(6px);overflow-y:auto}
+.sidebar .brand{font-family:var(--font-serif);font-size:.95rem;font-weight:500;color:var(--teal);margin-bottom:2rem;line-height:1.4}
+.sidebar .brand em{display:block;color:var(--ink-mute);font-weight:400;font-size:.85rem;margin-top:.25rem}
+.sidebar nav ul{list-style:none;padding:0;margin:0}
+.sidebar nav li{margin:0.5rem 0}
+.sidebar nav a{display:block;padding:.25rem .5rem;border-radius:3px;color:var(--ink-mute);font-size:.88rem;text-decoration:none;border-left:2px solid transparent;transition:all .15s}
+.sidebar nav a:hover{color:var(--teal);border-left-color:var(--amber)}
+.sidebar nav a.active{color:var(--teal);border-left-color:var(--teal);background:var(--amber-soft);font-weight:500}
+.sidebar .num{font-family:var(--font-mono);color:var(--amber);font-size:.8em;margin-right:.5rem}
+
+.main{padding:3rem 3.5rem 6rem;max-width:var(--wide-w)}
+section{margin-bottom:5rem}
+section p{max-width:var(--content-w)}
+
+/* Header */
+.hero{border-bottom:1px solid var(--line);padding-bottom:3rem;margin-bottom:4rem}
+.hero .kicker{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.15em;font-size:.78rem;color:var(--amber);margin-bottom:1rem}
+.hero h1{font-weight:500}
+.hero h1 em{color:var(--teal-it)}
+.hero .thesis{font-size:1.15rem;color:var(--ink-mute);max-width:var(--content-w);margin-top:1.5rem;line-height:1.7}
+.hero .meta{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:.8rem;color:var(--ink-mute)}
+.hero .meta span strong{color:var(--ink)}
+
+/* Section numbering */
+.sec-num{font-family:var(--font-mono);font-size:.78rem;color:var(--amber);letter-spacing:.15em;margin-bottom:.5rem;text-transform:uppercase}
+
+/* Block cards */
+.blocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin:2rem 0}
+.block{border:1px solid var(--line);background:rgba(255,253,247,.5);padding:1.5rem;border-radius:4px;position:relative;transition:all .2s}
+.block:hover{border-color:var(--teal);transform:translateY(-2px)}
+.block .tag{position:absolute;top:-10px;left:1rem;background:var(--paper);padding:0 .5rem;font-family:var(--font-mono);font-size:.75rem;color:var(--amber);letter-spacing:.1em}
+.block h3{color:var(--teal);margin-bottom:.5rem}
+.block .wave{font-family:var(--font-mono);font-size:.75rem;color:var(--ink-mute);margin-top:.75rem}
+.block ul{margin:.5rem 0 0;padding:0 0 0 1rem;font-size:.92rem;line-height:1.6}
+
+/* Diagram area */
+.diagram-frame{border:1px solid var(--line);background:rgba(255,253,247,.7);padding:2rem;border-radius:4px;margin:1.5rem 0;overflow-x:auto}
+.diagram-frame svg{display:block;max-width:100%;height:auto}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.93rem}
+th{text-align:left;padding:.65rem .75rem;background:var(--paper-soft);font-family:var(--font-mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-mute);border-bottom:1px solid var(--line)}
+td{padding:.65rem .75rem;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td .pass{color:var(--green);font-family:var(--font-mono);font-weight:500}
+td .fail{color:var(--red);font-family:var(--font-mono);font-weight:500}
+td .pending{color:var(--amber);font-family:var(--font-mono);font-weight:500}
+td code{font-size:.85em}
+
+/* Cadence */
+.cadence{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin:1.5rem 0;font-size:.85rem}
+.wave{border:1px solid var(--line);padding:1rem;border-radius:4px;background:rgba(255,253,247,.5)}
+.wave .w-num{font-family:var(--font-mono);font-size:.78rem;color:var(--amber);letter-spacing:.1em}
+.wave .w-days{font-family:var(--font-mono);font-size:1.5rem;color:var(--teal);margin:.25rem 0}
+.wave .w-state{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.1em;margin-top:.5rem}
+.wave.active{background:var(--amber-soft);border-color:var(--amber)}
+
+/* Test pyramid */
+.pyramid{display:flex;flex-direction:column;align-items:center;margin:2rem 0;gap:.25rem;max-width:700px;margin-left:auto;margin-right:auto}
+.tier{padding:.75rem 1.25rem;border:1px solid var(--line);background:rgba(255,253,247,.6);border-radius:4px;text-align:center;transition:all .2s}
+.tier:hover{border-color:var(--teal);background:var(--amber-soft)}
+.tier .t-name{font-family:var(--font-serif);font-weight:500;color:var(--teal);font-size:1.05rem}
+.tier .t-desc{font-size:.82rem;color:var(--ink-mute);margin-top:.2rem}
+.tier.w7{width:95%}
+.tier.w6{width:85%}
+.tier.w5{width:75%;background:var(--amber-soft);border-color:var(--amber)}  /* Responsible AI — hero tier */
+.tier.w4{width:65%}
+.tier.w3{width:55%}
+.tier.w2{width:45%}
+.tier.w1{width:35%}
+
+/* Gates grid */
+.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+.gate{border:1px solid var(--line);padding:1.25rem;border-radius:4px;background:rgba(255,253,247,.5);text-align:center}
+.gate .g-id{font-family:var(--font-mono);font-size:1.1rem;color:var(--amber);font-weight:500}
+.gate .g-name{font-family:var(--font-serif);margin:.35rem 0;color:var(--teal);font-size:1rem}
+.gate .g-when{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.1em;margin:.5rem 0 .25rem}
+.gate .g-fail{font-size:.82rem;color:var(--red);margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--line)}
+
+/* DoD checklist */
+.dod{margin:1.5rem 0}
+.dod-item{display:flex;align-items:flex-start;padding:.65rem .25rem;border-bottom:1px solid var(--line);gap:.75rem;font-size:.93rem}
+.dod-item:last-child{border-bottom:none}
+.dod-item .n{font-family:var(--font-mono);color:var(--amber);font-size:.85rem;min-width:2rem}
+.dod-item .chk{width:18px;height:18px;border:1.5px solid var(--line);border-radius:3px;margin-top:3px;flex-shrink:0;background:rgba(255,255,255,.5)}
+.dod-item.closure{background:var(--amber-soft);padding:.85rem .25rem;border-left:3px solid var(--amber)}
+.dod-item.closure .chk{border-color:var(--amber)}
+
+/* ADR list */
+.adrs{margin:1.5rem 0}
+.adr{border-left:3px solid var(--line);padding:.5rem 0 .5rem 1.25rem;margin-bottom:1rem}
+.adr:hover{border-left-color:var(--amber)}
+.adr .id{font-family:var(--font-mono);color:var(--amber);font-size:.8rem;letter-spacing:.1em}
+.adr .decision{font-weight:500;color:var(--teal);margin:.15rem 0}
+.adr .why{font-size:.88rem;color:var(--ink-mute)}
+
+/* TCO */
+.tco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+.tco-card{border:1px solid var(--line);padding:1.5rem;border-radius:4px;background:rgba(255,253,247,.5);text-align:center}
+.tco-card.pass{background:rgba(46,95,62,.06);border-color:var(--green)}
+.tco-card .label{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-mute)}
+.tco-card .amount{font-family:var(--font-serif);font-size:2.2rem;color:var(--teal);margin:.5rem 0;font-weight:500}
+.tco-card .note{font-size:.82rem;color:var(--ink-mute)}
+.tco-card.pass .amount{color:var(--green)}
+
+/* Callouts */
+.callout{border-left:3px solid var(--amber);background:var(--amber-soft);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 4px 4px 0;font-size:.95rem}
+.callout .label{font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:var(--amber);margin-bottom:.35rem;display:block}
+
+/* Footer */
+footer{border-top:1px solid var(--line);padding:3rem 0 1rem;margin-top:4rem;font-size:.85rem;color:var(--ink-mute)}
+footer .sig{font-family:var(--font-serif);font-style:italic;color:var(--teal-it);margin-bottom:.5rem}
+footer .meta{font-family:var(--font-mono);font-size:.75rem}
+footer a{color:var(--ink-mute)}
+
+/* Mobile */
+@media (max-width: 980px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:1.5rem 2rem}
+  .sidebar nav ul{display:flex;flex-wrap:wrap;gap:.5rem}
+  .sidebar nav li{margin:0}
+  .main{padding:2rem 1.5rem 4rem}
+  h1{font-size:2.2rem}
+  .cadence{grid-template-columns:1fr 1fr}
+  .gates{grid-template-columns:1fr 1fr}
+  .tco-grid{grid-template-columns:1fr}
+}
+@media print{
+  .sidebar{display:none}
+  .layout{grid-template-columns:1fr}
+  body{background:white;background-image:none}
+  .block:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">Project Ground Zero<em>Architecture · Rev 1.1</em></div>
+  <nav>
+    <ul>
+      <li><a href="#thesis"><span class="num">00</span>Thesis</a></li>
+      <li><a href="#mission"><span class="num">01</span>Mission</a></li>
+      <li><a href="#blocks"><span class="num">02</span>The Five Blocks</a></li>
+      <li><a href="#zones"><span class="num">03</span>System Zones</a></li>
+      <li><a href="#cadence"><span class="num">04</span>Delivery Cadence</a></li>
+      <li><a href="#gates"><span class="num">05</span>Stage Gates</a></li>
+      <li><a href="#pyramid"><span class="num">06</span>Test Pyramid</a></li>
+      <li><a href="#dod"><span class="num">07</span>Definition of Done</a></li>
+      <li><a href="#adrs"><span class="num">08</span>Decisions</a></li>
+      <li><a href="#tco"><span class="num">09</span>TCO</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<main class="main">
+
+<header class="hero" id="top">
+  <div class="kicker">GenAI Architect Portfolio · Charter-00 · Ground Zero</div>
+  <h1>Platform <em>before</em> payload.</h1>
+  <p class="thesis">
+    Ground Zero is the architectural substrate on which every future project rests. Its value is not in what it does — it is in what it <em>enables every subsequent project to do</em>, faster and with zero architectural drift. Twenty minutes from empty Azure subscription to deployed demo, or the Charter doesn't close.
+  </p>
+  <div class="meta">
+    <span><strong>Duration</strong> 21 days · 5 waves</span>
+    <span><strong>Budget</strong> $19.63 of $25 ceiling</span>
+    <span><strong>Targets</strong> Local · Git · HF · Azure</span>
+    <span><strong>Dammam</strong> 2026-04-24</span>
+  </div>
+</header>
+
+<!-- ==================== MISSION ==================== -->
+<section id="mission">
+  <div class="sec-num">§ 01 · Mission</div>
+  <h2>Prove the platform works end-to-end before any use-case content exists.</h2>
+  <p>Ground Zero succeeds if, at closure:</p>
+  <ul>
+    <li>A hiring-panel reviewer lands on the PCP, sees live architecture, clicks through to a working demo, views the as-built ledger, and <em>trusts that what they see matches reality</em>;</li>
+    <li>The architect can scaffold a new project with <code>./scripts/new-project.sh &lt;n&gt;</code> and have CI, tests, deploys, and PCP integration work on first run;</li>
+    <li>A fresh Azure subscription, GitHub account, and HF account reproduce the entire system in under 20 minutes.</li>
+  </ul>
+  <div class="callout">
+    <span class="label">Load-bearing idea</span>
+    Most portfolios bundle infra into use-case projects. Ground Zero isolates the substrate so the substrate can be rigorous and the use-cases can breathe. This is how real enterprise GenAI programs work — MLOps before product.
+  </div>
+</section>
+
+<hr>
+
+<!-- ==================== THE FIVE BLOCKS ==================== -->
+<section id="blocks">
+  <div class="sec-num">§ 02 · The Five Blocks</div>
+  <h2>Five Builder Briefs · one block each.</h2>
+  <p>Each block is handed off as a self-contained Builder Brief to a separate Claude Code session. Parallel cadence: A + B in Wave 1, C + D in Wave 2, E solo in Wave 3.</p>
+  <div class="blocks">
+    <div class="block">
+      <span class="tag">BLOCK A</span>
+      <h3>Platform & Identity</h3>
+      <p>The foundation. GitHub repos, Azure landing zone, OIDC federation, Bicep/Terraform modules, pre-commit discipline.</p>
+      <ul>
+        <li>2 public repos · polyrepo</li>
+        <li>Entra workload identity federation</li>
+        <li>4 Bicep modules (naming, tags, KV, MI)</li>
+        <li>Zero long-lived secrets</li>
+      </ul>
+      <div class="wave">Wave 1 · parallel with B</div>
+    </div>
+    <div class="block">
+      <span class="tag">BLOCK B</span>
+      <h3>Runtime Substrate</h3>
+      <p>Azure resources the payload will use. 10 Bicep modules authored, validated, not yet deployed. Local dev stack via Docker Compose.</p>
+      <ul>
+        <li>AOAI · disableLocalAuth · 3 deployments</li>
+        <li>AI Search · Cosmos · Blob · Content Safety</li>
+        <li>Langfuse self-hosted · App Insights</li>
+        <li>docker-compose.yml for local</li>
+      </ul>
+      <div class="wave">Wave 1 · parallel with A</div>
+    </div>
+    <div class="block">
+      <span class="tag">BLOCK C</span>
+      <h3>Delivery Pipeline</h3>
+      <p>The orchestration layer. Seven GitHub Actions workflows with narrative names. Ephemeral Azure per ADR-0013. Ledger-driven status.</p>
+      <ul>
+        <li>7 workflows · narrative names · step summaries</li>
+        <li>G1–G4 stage gates · fail-closed</li>
+        <li>PR comment bot · 8 README badges</li>
+        <li>deploy.sh + teardown-azure.sh</li>
+      </ul>
+      <div class="wave">Wave 2 · parallel with D</div>
+    </div>
+    <div class="block">
+      <span class="tag">BLOCK D</span>
+      <h3>Portfolio Control Plane</h3>
+      <p>The resume URL. Astro 5 static site on <code>&lt;user&gt;.github.io</code>. 8 zones. Live status badge with ephemeral-endpoint UX.</p>
+      <ul>
+        <li>8 zones · editorial aesthetic</li>
+        <li>Ledger timeline · drift indicator</li>
+        <li>Honest placeholders for not-started projects</li>
+        <li>Free tier · $0/yr forever</li>
+      </ul>
+      <div class="wave">Wave 2 · parallel with C</div>
+    </div>
+    <div class="block">
+      <span class="tag">BLOCK E</span>
+      <h3>Hello AI Payload</h3>
+      <p>The trivial application that exercises every layer. Four pillars, full safety + observability stack, three deliberate failure-demo branches.</p>
+      <ul>
+        <li>RAG · LangGraph agent · Multi-agent (MCP) · Fine-tune scaffold</li>
+        <li>Content Safety · NeMo Guardrails · Presidio · Langfuse</li>
+        <li>7 test tiers · Streamlit UI</li>
+        <li>3 <code>demo-fails-*</code> branches</li>
+      </ul>
+      <div class="wave">Wave 3 · solo</div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ==================== SYSTEM ZONES ==================== -->
+<section id="zones">
+  <div class="sec-num">§ 03 · System Zones</div>
+  <h2>Four concentric zones. OIDC boundary around all of them.</h2>
+  <div class="diagram-frame">
+    <svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="zones-title">
+      <title id="zones-title">Ground Zero system zones</title>
+      <defs>
+        <style>
+          .z-bg{fill:#FAF6EC}
+          .z-fill{fill:rgba(13,59,82,.04);stroke:#0D3B52;stroke-width:1.2}
+          .z-fill-2{fill:rgba(179,92,0,.06);stroke:#B35C00;stroke-width:1.2}
+          .z-fill-3{fill:rgba(26,95,122,.05);stroke:#1A5F7A;stroke-width:1}
+          .z-box{fill:#FFFDF7;stroke:#D8D1BD;stroke-width:.8}
+          .z-label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#6B6559;letter-spacing:.1em;text-transform:uppercase}
+          .z-title{font-family:'Fraunces',serif;font-size:13px;fill:#0D3B52;font-weight:500}
+          .z-item{font-family:'Geist',sans-serif;font-size:11px;fill:#1B1916}
+          .z-oidc{fill:none;stroke:#B35C00;stroke-width:1.5;stroke-dasharray:6,4}
+          .z-flow{fill:none;stroke:#1A5F7A;stroke-width:1.2;marker-end:url(#arrow)}
+        </style>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A5F7A"/>
+        </marker>
+      </defs>
+
+      <!-- background -->
+      <rect width="900" height="540" class="z-bg"/>
+
+      <!-- OIDC boundary -->
+      <rect x="20" y="20" width="860" height="500" rx="8" class="z-oidc"/>
+      <text x="30" y="35" class="z-label" fill="#B35C00">OIDC FEDERATION BOUNDARY · NO LONG-LIVED SECRETS</text>
+
+      <!-- Zone 1: Portfolio Infrastructure -->
+      <rect x="50" y="60" width="800" height="100" rx="4" class="z-fill"/>
+      <text x="70" y="85" class="z-label">ZONE 1 · PORTFOLIO INFRASTRUCTURE (PROJECT-AGNOSTIC)</text>
+      <g transform="translate(70,100)">
+        <rect width="160" height="45" rx="3" class="z-box"/>
+        <text x="12" y="18" class="z-title">GitHub</text>
+        <text x="12" y="34" class="z-item">hub + project repos</text>
+      </g>
+      <g transform="translate(250,100)">
+        <rect width="160" height="45" rx="3" class="z-box"/>
+        <text x="12" y="18" class="z-title">Azure Subscription</text>
+        <text x="12" y="34" class="z-item">landing zone · RG</text>
+      </g>
+      <g transform="translate(430,100)">
+        <rect width="160" height="45" rx="3" class="z-box"/>
+        <text x="12" y="18" class="z-title">HuggingFace</text>
+        <text x="12" y="34" class="z-item">Spaces · Models</text>
+      </g>
+      <g transform="translate(610,100)">
+        <rect width="210" height="45" rx="3" class="z-box"/>
+        <text x="12" y="18" class="z-title">PCP · &lt;user&gt;.github.io</text>
+        <text x="12" y="34" class="z-item">Astro · free · always-on</text>
+      </g>
+
+      <!-- Zone 2: Runtime Substrate -->
+      <rect x="50" y="180" width="800" height="130" rx="4" class="z-fill-3"/>
+      <text x="70" y="205" class="z-label">ZONE 2 · RUNTIME SUBSTRATE (SHARED)</text>
+      <g transform="translate(70,220)">
+        <rect width="140" height="45" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-title">Azure OpenAI</text>
+        <text x="10" y="34" class="z-item">Sweden Central</text>
+      </g>
+      <g transform="translate(230,220)">
+        <rect width="130" height="45" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-title">AI Search</text>
+        <text x="10" y="34" class="z-item">free tier · hybrid</text>
+      </g>
+      <g transform="translate(380,220)">
+        <rect width="120" height="45" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-title">Cosmos</text>
+        <text x="10" y="34" class="z-item">serverless</text>
+      </g>
+      <g transform="translate(520,220)">
+        <rect width="150" height="45" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-title">Content Safety</text>
+        <text x="10" y="34" class="z-item">F0 · Prompt Shields</text>
+      </g>
+      <g transform="translate(690,220)">
+        <rect width="140" height="45" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-title">Langfuse</text>
+        <text x="10" y="34" class="z-item">self-hosted</text>
+      </g>
+      <g transform="translate(140,280)">
+        <rect width="140" height="22" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-item">Container Apps</text>
+      </g>
+      <g transform="translate(300,280)">
+        <rect width="140" height="22" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-item">Blob Storage</text>
+      </g>
+      <g transform="translate(460,280)">
+        <rect width="140" height="22" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-item">Key Vault · Entra MI</text>
+      </g>
+      <g transform="translate(620,280)">
+        <rect width="140" height="22" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-item">App Insights</text>
+      </g>
+
+      <!-- Zone 3: Delivery Pipeline -->
+      <rect x="50" y="330" width="800" height="85" rx="4" class="z-fill-2"/>
+      <text x="70" y="355" class="z-label">ZONE 3 · DELIVERY PIPELINE</text>
+      <g transform="translate(70,370)">
+        <rect width="130" height="35" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-title">deploy.sh</text>
+        <text x="10" y="29" class="z-item">orchestrator</text>
+      </g>
+      <g transform="translate(220,370)">
+        <rect width="160" height="35" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-title">GH Actions × 7</text>
+        <text x="10" y="29" class="z-item">G1–G4 · narrative names</text>
+      </g>
+      <g transform="translate(400,370)">
+        <rect width="150" height="35" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-title">Ledger · JSONL</text>
+        <text x="10" y="29" class="z-item">append-only</text>
+      </g>
+      <g transform="translate(570,370)">
+        <rect width="140" height="35" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-title">metadata.json</text>
+        <text x="10" y="29" class="z-item">project manifest</text>
+      </g>
+      <g transform="translate(730,370)">
+        <rect width="100" height="35" rx="3" class="z-box"/>
+        <text x="10" y="15" class="z-title">Registry</text>
+        <text x="10" y="29" class="z-item">ACR Basic</text>
+      </g>
+
+      <!-- Zone 4: Hello AI Payload -->
+      <rect x="50" y="435" width="800" height="70" rx="4" class="z-fill"/>
+      <text x="70" y="458" class="z-label">ZONE 4 · HELLO AI PAYLOAD · BLOCK E</text>
+      <g transform="translate(70,470)">
+        <rect width="140" height="28" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-item">RAG · 1 doc</text>
+      </g>
+      <g transform="translate(230,470)">
+        <rect width="150" height="28" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-item">LangGraph Agent</text>
+      </g>
+      <g transform="translate(400,470)">
+        <rect width="150" height="28" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-item">Multi-agent · MCP</text>
+      </g>
+      <g transform="translate(570,470)">
+        <rect width="160" height="28" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-item">Fine-tune scaffold</text>
+      </g>
+      <g transform="translate(750,470)">
+        <rect width="80" height="28" rx="3" class="z-box"/>
+        <text x="10" y="18" class="z-item">Streamlit</text>
+      </g>
+    </svg>
+  </div>
+  <p>OIDC federation surrounds the entire system. No Azure credentials ever stored in GitHub. Tokens minted per workflow run, scoped per run. The PCP sits intentionally <em>outside</em> the runtime substrate — monitoring must be independent of monitored (ADR-0003).</p>
+</section>
+
+<hr>
+
+<!-- ==================== CADENCE ==================== -->
+<section id="cadence">
+  <div class="sec-num">§ 04 · Delivery Cadence</div>
+  <h2>Five waves. Parallel where dependencies allow.</h2>
+  <div class="cadence">
+    <div class="wave">
+      <div class="w-num">WAVE 1</div>
+      <div class="w-days">1–5</div>
+      <div><strong>Blocks A + B</strong></div>
+      <div>Platform + Runtime in parallel. Local only.</div>
+      <div class="w-state">Azure: not activated</div>
+    </div>
+    <div class="wave">
+      <div class="w-num">WAVE 2</div>
+      <div class="w-days">6–10</div>
+      <div><strong>Blocks C + D</strong></div>
+      <div>Pipeline + PCP in parallel. GH Pages live.</div>
+      <div class="w-state">Azure: not activated</div>
+    </div>
+    <div class="wave">
+      <div class="w-num">WAVE 3</div>
+      <div class="w-days">11–14</div>
+      <div><strong>Block E</strong></div>
+      <div>Hello AI built locally via Docker + Ollama.</div>
+      <div class="w-state">Azure: not activated</div>
+    </div>
+    <div class="wave active">
+      <div class="w-num">WAVE 4</div>
+      <div class="w-days">15–18</div>
+      <div><strong>Validation Sprint</strong></div>
+      <div>Azure activates. Fresh-deploy proof. Teardown test.</div>
+      <div class="w-state">Azure: ACTIVATED · ~$19.63</div>
+    </div>
+    <div class="wave">
+      <div class="w-num">WAVE 5</div>
+      <div class="w-days">19–21</div>
+      <div><strong>Close-out</strong></div>
+      <div>Editorial HTML polish · runbook · handoff to Charter #1.</div>
+      <div class="w-state">Azure: torn down</div>
+    </div>
+  </div>
+  <div class="callout">
+    <span class="label">Why Wave 4 gates the Azure spend</span>
+    The $200 credit has a 30-day clock. Activating on Day 1 would burn the window on infra debugging. Gating activation to Wave 4 concentrates spend into validation — and leaves $180.37 for Project 1 content. This is deliberate · documented in ADR-0013.
+  </div>
+</section>
+
+<hr>
+
+<!-- ==================== STAGE GATES ==================== -->
+<section id="gates">
+  <div class="sec-num">§ 05 · Stage Gates</div>
+  <h2>Four gates. Fail-closed. Every gate ledger-written.</h2>
+  <div class="gates">
+    <div class="gate">
+      <div class="g-id">G1</div>
+      <div class="g-name">Pre-merge</div>
+      <div class="g-when">PR CI</div>
+      <div>Unit · lint · type · coverage ≥ 70%</div>
+      <div class="g-fail">PR blocked</div>
+    </div>
+    <div class="gate">
+      <div class="g-id">G2</div>
+      <div class="g-name">Pre-deploy</div>
+      <div class="g-when">Before deploy</div>
+      <div>Schema validate · Content Safety wired</div>
+      <div class="g-fail">deploy.sh refuses</div>
+    </div>
+    <div class="gate">
+      <div class="g-id">G3</div>
+      <div class="g-name">Post-deploy</div>
+      <div class="g-when">Per target</div>
+      <div>Smoke · endpoint reachable</div>
+      <div class="g-fail">Marked UNHEALTHY</div>
+    </div>
+    <div class="gate">
+      <div class="g-id">G4</div>
+      <div class="g-name">Post-validation</div>
+      <div class="g-when">All targets deployed</div>
+      <div>Guardrail · Responsible AI · Eval thresholds</div>
+      <div class="g-fail">Marked REJECTED</div>
+    </div>
+  </div>
+  <p>Each gate runs automated and writes a ledger entry. Ledger entries appear on the PCP As-Built timeline — <em>including failures</em>, by design. A portfolio that shows only green is a portfolio that has hidden its history.</p>
+</section>
+
+<hr>
+
+<!-- ==================== TEST PYRAMID ==================== -->
+<section id="pyramid">
+  <div class="sec-num">§ 06 · Test Pyramid</div>
+  <h2>Seven tiers. Responsible AI is first-class.</h2>
+  <p>Most portfolios implement Unit + maybe Integration. Ground Zero implements seven. AI Guardrail and Responsible AI are the architect-signal differentiators — they test that safety boundaries actually fire, not that the code "looks" safe.</p>
+  <div class="pyramid">
+    <div class="tier w7">
+      <div class="t-name">Tier 1 · Unit</div>
+      <div class="t-desc">Pure component logic · pytest · mocked dependencies · G1</div>
+    </div>
+    <div class="tier w6">
+      <div class="t-name">Tier 2 · Smoke</div>
+      <div class="t-desc">Post-deploy health per target · G3</div>
+    </div>
+    <div class="tier w5">
+      <div class="t-name">Tier 3 · Functional</div>
+      <div class="t-desc">End-to-end scenarios · Playwright + httpx · G4</div>
+    </div>
+    <div class="tier w4">
+      <div class="t-name">Tier 4 · AI Guardrail</div>
+      <div class="t-desc">NeMo · Content Safety · Presidio assertions · G4</div>
+    </div>
+    <div class="tier w5">
+      <div class="t-name">Tier 5 · Responsible AI ⭐</div>
+      <div class="t-desc">Bias · toxicity · hallucination · groundedness thresholds · Giskard + DeepEval · G4</div>
+    </div>
+    <div class="tier w3">
+      <div class="t-name">Tier 6 · Red-team</div>
+      <div class="t-desc">Adversarial · Garak + PyRIT · scheduled weekly</div>
+    </div>
+    <div class="tier w2">
+      <div class="t-name">Tier 7 · Eval Regression</div>
+      <div class="t-desc">RAGAS · DeepEval · Promptfoo · nightly threshold gate</div>
+    </div>
+  </div>
+  <div class="callout">
+    <span class="label">Confidence signal</span>
+    Three permanent branches (<code>demo-fails-g1</code> · <code>demo-fails-guardrail</code> · <code>demo-regresses-eval</code>) exist <em>specifically to break</em>. Each one demonstrates a different gate rejecting a different failure mode. Showing known failure modes is more convincing than polishing them away.
+  </div>
+</section>
+
+<hr>
+
+<!-- ==================== DoD ==================== -->
+<section id="dod">
+  <div class="sec-num">§ 07 · Definition of Done</div>
+  <h2>Thirteen criteria. Binary. No grey.</h2>
+  <div class="dod">
+    <div class="dod-item"><span class="n">01</span><span class="chk"></span><span>Both repos (<code>genai-portfolio-hub</code> · <code>project-00-ground-zero</code>) public on GitHub</span></div>
+    <div class="dod-item"><span class="n">02</span><span class="chk"></span><span>Azure subscription active · OIDC working · Bicep deploys from empty subscription in &lt; 20 min</span></div>
+    <div class="dod-item"><span class="n">03</span><span class="chk"></span><span>PCP live at <code>&lt;user&gt;.github.io</code> · Ground Zero status rendered from ledger</span></div>
+    <div class="dod-item"><span class="n">04</span><span class="chk"></span><span>Hello AI deployed to Local + Git + HF Space + Azure during Wave 4 · ephemeral Azure acceptable</span></div>
+    <div class="dod-item"><span class="n">05</span><span class="chk"></span><span>All 7 test tiers implemented with passing tests</span></div>
+    <div class="dod-item"><span class="n">06</span><span class="chk"></span><span>G1–G4 enforced · one documented test proves each gate fails closed</span></div>
+    <div class="dod-item"><span class="n">07</span><span class="chk"></span><span>Ledger has entries for every deploy · rendered on PCP As-Built zone</span></div>
+    <div class="dod-item"><span class="n">08</span><span class="chk"></span><span><code>metadata.json</code> populated · PCP reads it correctly</span></div>
+    <div class="dod-item"><span class="n">09</span><span class="chk"></span><span><code>deploy.sh --teardown</code> works · no orphaned resources</span></div>
+    <div class="dod-item closure"><span class="n">10</span><span class="chk"></span><span><strong>The platform-proof.</strong> Delete the Azure RG · re-run from scratch · everything works. Under 20 minutes.</span></div>
+    <div class="dod-item"><span class="n">11</span><span class="chk"></span><span><code>architecture.html</code> · <code>charter.html</code> · <code>review.html</code> published in editorial aesthetic</span></div>
+    <div class="dod-item"><span class="n">12</span><span class="chk"></span><span>Runbook · threat model · TCO workbook committed</span></div>
+    <div class="dod-item"><span class="n">13</span><span class="chk"></span><span><code>scripts/new-project.sh</code> scaffolds Project 1 repo cleanly · CI green on first run</span></div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ==================== ADRs ==================== -->
+<section id="adrs">
+  <div class="sec-num">§ 08 · Architectural Decisions</div>
+  <h2>Thirteen decisions · load-bearing.</h2>
+  <div class="adrs">
+    <div class="adr"><div class="id">ADR-0001</div><div class="decision">Azure region = Sweden Central · Global Standard</div><div class="why">Microsoft-recommended · broadest EU model availability · ~100ms from Dammam · UAE North routes inference out</div></div>
+    <div class="adr"><div class="id">ADR-0002</div><div class="decision">OIDC federation GitHub ↔ Entra ID</div><div class="why">Zero long-lived secrets · scoped tokens per workflow · architect signal for modern cloud security</div></div>
+    <div class="adr"><div class="id">ADR-0003</div><div class="decision">PCP on GitHub Pages · not Azure SWA</div><div class="why">Monitoring must be independent of monitored · PCP on Azure creates circular dependency during the exact outages the PCP exists to report</div></div>
+    <div class="adr"><div class="id">ADR-0004</div><div class="decision">Polyrepo · hub + one repo per project</div><div class="why">Hiring managers browse one repo at a time · independent CI/CD · each project sells on its own README</div></div>
+    <div class="adr"><div class="id">ADR-0005</div><div class="decision"><code>deploy.sh</code> is orchestrator · PCP is consumer-of-deploys</div><div class="why">Failure isolation · broken site ≠ broken deploy</div></div>
+    <div class="adr"><div class="id">ADR-0006</div><div class="decision">Bicep primary · Terraform secondary</div><div class="why">Azure-native speed + multi-cloud fluency signal</div></div>
+    <div class="adr"><div class="id">ADR-0007</div><div class="decision">Seven test tiers · Responsible AI + Red-team first-class</div><div class="why">Most portfolios omit them entirely · architect-signal differentiator</div></div>
+    <div class="adr"><div class="id">ADR-0008</div><div class="decision">GitHub is source of truth · P-SelfDescribing principle</div><div class="why">Eliminates the two-system problem that causes doc sites to drift within weeks</div></div>
+    <div class="adr"><div class="id">ADR-0009</div><div class="decision">Python 3.12 + <code>uv</code></div><div class="why">Current stable · fastest modern package manager · <code>uv</code> adoption signals currency</div></div>
+    <div class="adr"><div class="id">ADR-0010</div><div class="decision">Astro 5 for PCP</div><div class="why">Markdown-native · zero-JS default · content collections map to project descriptors</div></div>
+    <div class="adr"><div class="id">ADR-0011</div><div class="decision">Deliberate failure-demo branches kept permanently</div><div class="why">Showing known failure modes signals you understand the boundaries · confidence signal over polish</div></div>
+    <div class="adr"><div class="id">ADR-0012</div><div class="decision">PCP URL = <code>&lt;user&gt;.github.io</code> · free tier</div><div class="why">$0/yr · content carries signal · portable later via CNAME</div></div>
+    <div class="adr"><div class="id">ADR-0013</div><div class="decision">Azure endpoint ephemeral by design</div><div class="why">$0.50/demo vs $200/2-weeks if always-on · doubles as DoD #10 re-runnability proof</div></div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ==================== TCO ==================== -->
+<section id="tco">
+  <div class="sec-num">§ 09 · Total Cost of Ownership</div>
+  <h2>$19.63 actual · $25 ceiling · NFR-04 passes.</h2>
+  <p>Full calculation logic in <code>docs/06-tco.xlsx</code> with 49 live formulas · BLUE inputs · BLACK formulas · GREEN cross-sheet links. Every rate sourced from Azure's 2026-04 published pricing.</p>
+  <div class="tco-grid">
+    <div class="tco-card pass">
+      <div class="label">Ground Zero</div>
+      <div class="amount">$19.63</div>
+      <div class="note">Wave 4 Azure spend</div>
+    </div>
+    <div class="tco-card">
+      <div class="label">NFR-04 Ceiling</div>
+      <div class="amount">$25.00</div>
+      <div class="note">Headroom $5.37</div>
+    </div>
+    <div class="tco-card">
+      <div class="label">Reserved P1+</div>
+      <div class="amount">$180.37</div>
+      <div class="note">of $200 free credit</div>
+    </div>
+  </div>
+  <h4 style="margin-top:2rem">Spend breakdown</h4>
+  <table>
+    <thead><tr><th>Component</th><th>Line</th><th style="text-align:right">USD</th></tr></thead>
+    <tbody>
+      <tr><td>Tokens</td><td>29.6M total · GPT-4o-mini + GPT-4o + embeddings</td><td style="text-align:right">$6.24</td></tr>
+      <tr><td>Compute</td><td>Container Apps · 3-day pulse · 0.5 vCPU · 1 GiB</td><td style="text-align:right">$2.34</td></tr>
+      <tr><td>ML GPU</td><td>NC6 · 2 hours · LoRA demo run</td><td style="text-align:right">$1.80</td></tr>
+      <tr><td>Fine-tune endpoint</td><td>Online Endpoint · 1 hour ephemeral</td><td style="text-align:right">$1.70</td></tr>
+      <tr><td>Storage · search · safety</td><td>AI Search Free · Cosmos · Blob · Content Safety F0 · Doc Intelligence</td><td style="text-align:right">$0.00</td></tr>
+      <tr><td>Misc paid residual</td><td>Key Vault ops · ACR Basic 7-day pro-rated</td><td style="text-align:right">$1.32</td></tr>
+      <tr><td>Buffer</td><td>Unplanned / re-runs</td><td style="text-align:right">$6.00</td></tr>
+      <tr style="font-weight:500"><td>Total</td><td>Actual · NFR-04 PASS</td><td style="text-align:right">$19.63</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <div class="sig">S. Somasundaram · GenAI Architect</div>
+  <div class="meta">Project Ground Zero · Charter-00 Rev 1.1 · Dammam · 2026-04-24</div>
+</footer>
+
+</main>
+</div>
+
+<script>
+// Scrollspy · highlight active nav item
+const sections = document.querySelectorAll('section[id], header[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
