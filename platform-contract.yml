@@ -1,42 +1,35 @@
-# ============================================================================
-# platform-contract.yml
-# Produced by: Brief A · Consumed by: Briefs B, C, D, E
-# Rev: 1.0 · 2026-04-24
-# Values marked <TBD-wave-4> are populated on Azure credit activation.
-# ============================================================================
-
 azure:
-  subscription_id: "<TBD-wave-4>"
-  tenant_id: "<TBD-wave-4>"
-  resource_group: rg-genai-portfolio-prod-swc
+  subscription_id: d599c6a3-6859-4aae-8c0e-63674a3b0704
+  tenant_id: a5798993-43f3-452a-9e32-5893aff20a36
   region: swedencentral
-  key_vault_name: kv-genai-portfolio-01
-  managed_identity_name: mi-genai-portfolio-01
+  resource_group: rg-portfolio-gz-001
+  prefix: gz
 
-entra:
-  app_display_name: genai-portfolio-github-oidc
-  app_object_id: "<TBD-wave-4>"
-  app_client_id: "<TBD-wave-4>"
-  federation_subjects:
-    - "repo:sowthri-industrial-ai/genai-portfolio-hub:ref:refs/heads/main"
-    - "repo:sowthri-industrial-ai/project-00-ground-zero:ref:refs/heads/main"
-
-naming:
-  prefix_pattern: "<type>-genai-portfolio-<seq>"
-  tag_keys:
-    - project
-    - project-phase
-    - environment
-    - cost-center
-    - owner
-    - poc-id
-    - managed-by
+identity:
+  app_client_id: 2d418851-4ff5-4f55-a967-e52ac5e5a6c3
+  app_object_id: 8bdf8298-b8b7-4c0e-8c60-b91acb9e109d
+  sp_object_id: 11651236-1168-4c45-953e-4cd00512dc3e
 
 github:
-  hub_repo: "https://github.com/sowthri-industrial-ai/genai-portfolio-hub"
-  project_repo: "https://github.com/sowthri-industrial-ai/project-00-ground-zero"
+  owner: sowthri-industrial-ai
+  repo: project-00-ground-zero
+  branch: main
 
-contract:
-  version: "1.0"
-  produced_by: "brief-a"
-  consumed_by: [brief-b, brief-c, brief-d, brief-e]
+oidc:
+  issuer: https://token.actions.githubusercontent.com
+  audience: api://AzureADTokenExchange
+  main_credential: gh-sowthri-industrial-ai-project-00-ground-zero-main
+  pr_credential: gh-sowthri-industrial-ai-project-00-ground-zero-pr
+
+deployment:
+  pattern: ephemeral_per_adr_0013
+  always_on:
+    - container_registry
+  ephemeral:
+    - container_app
+    - aoai_endpoint
+
+cost:
+  ground_zero_budget_usd: 25.00
+  per_demo_burn_usd: 0.50
+  monthly_floor_usd: 5.10
